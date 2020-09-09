@@ -4,12 +4,12 @@ import os
 import sys
 import time
 
-welecomeMSG = "歡迎使用 Tar Backup 系統!"
+welecomeMSG = "Welcome to use Tar Backup system!"
 exitMSG = "Thank you for your using"
 
 def recoverSingleFile():
     while True:
-        fileName = input("請輸入您想還原的檔案名稱，或是輸入「exit」返回上層選擇清單:")
+        fileName = input("Please input the file name which you want to recover, or input \"exit\" to go back to the selection list:")
         baseVersionLog = "backup/logs/"
         
         if fileName == "exit":
@@ -17,7 +17,7 @@ def recoverSingleFile():
             break
         elif os.path.exists(baseVersionLog + fileName):
             os.system("clear")
-            print("「%s」有這些版本:\n"% fileName)
+            print("\"%s\"has these versions:\n"% fileName)
 
             versionLog = baseVersionLog + fileName
             f = open(versionLog, "r")
@@ -27,9 +27,9 @@ def recoverSingleFile():
                 print("%d.%s"% (i, version.strip()))
                 i += 1            
             
-            print("%d.返回"% i)
+            print("%d.Go back"% i)
 
-            userChoice = input("\n請輸入您想取得的版本:")
+            userChoice = input("\nPlease select the version which you want to get:")
             os.system("clear")
 
             if userChoice == "%d"%i:
@@ -39,45 +39,45 @@ def recoverSingleFile():
 
 
         else:
-            print("檔案「%s」不存在任何備份，請再次輸入檔名。"% fileName)
+            print("There is no any backup of \"%s\", please input a new file name."% fileName)
             print()
 
 def showBackupContent(name, path):
     bFinished = False
     while not bFinished:
         os.system("clear")
-        print("備份「%s」包含了這些檔案及資料夾:\n"% name)
+        print("\"%s\"has these files and directories:\n"% name)
         content = os.listdir(path)
         for file in content:
             print(file)
 
-        print("\n1.找到要還原的檔案了，請幫我還原")
-        print("2.未看到要還原的檔案，查看此資料夾不同時間點的備份")
-        print("3.返回上層資料夾")
-        print("4.進入下層資料夾")
-        print("5.返回備份選擇清單")
+        print("\n1.Found the file, please recover it for me")
+        print("2.Not seen the file which I want, check different backup of this directory")
+        print("3.Go back to the previous directory")
+        print("4.Go forward to the next directory")
+        print("5.Go back to the backup selection list")
 
-        userChoice = input("\n請輸入您的選擇:")
+        userChoice = input("\nPlease input your choice:")
         if userChoice == "5":
             os.system("clear")
             bFinished = True
             return bFinished
         if userChoice == "1":
             os.system("clear")
-            print("請選擇您想還原的檔案\n")
+            print("Please select the file which you want to recover\n")
             i = 1
             for file in content:
                 if os.path.isfile(path + "/" + file):
                     print("%d.%s"% (i, file))
                     i += 1
-            print("%d.%s"%(i, "返回"))
+            print("%d.%s"%(i, "Go back"))
             
-            recoverChoice = input("\n您的選擇:")
+            recoverChoice = input("\nYour choice:")
             if recoverChoice == "%d"% i:
                 pass
             else:
                 os.system("clear")
-                input("還原完成，請按下 Enter 鍵，以離開程式")
+                input("Recovery finished, Please press enter to leave the program")
                 os.sys.exit()
         elif userChoice == "2":
             pass
@@ -86,18 +86,18 @@ def showBackupContent(name, path):
             if os.path.dirname(path) != "backup/database":
                 break
             else:
-                input("此資料夾為最上層目錄，請按 Enter 以重新選擇")
+                input("There is no previous directory, please press enter to go back to the selection list")
         elif userChoice == "4":
             os.system("clear")
-            print("請選擇您想進入的下層資料夾\n")
+            print("Please select the directory which you want to go forward\n")
             i = 1
             for file in content:
                 if os.path.isdir(path + "/" + file):
                     print("%d.%s"% (i, file))
                     i += 1
-            print("%d.%s"%(i, "返回"))
+            print("%d.%s"%(i, "Go back"))
             
-            folderChoice = input("\n您的選擇:")
+            folderChoice = input("\nYour choice:")
             if folderChoice == "%d"% i:
                 pass
             else:
@@ -109,20 +109,20 @@ def viewBackup():
         databasePath = "backup/database/"
         
         if not os.path.exists(databasePath) or len(os.listdir(databasePath)) == 0:
-            input("尚未進行過備份，按下 Enter 鍵，以返回主選單")
+            input("There is no any backup, press enter to go back to the main menu")
             os.system("clear")
             return
         
         backups = os.listdir(databasePath)
         backups.sort()
-        print("目前備份有\n")
+        print("We have these backups\n")
         i = 1
         for backup in backups:
             print("%d.%s"% (i, backup))
             i += 1
-        print("%d.返回"% i)
+        print("%d.Go back"% i)
         
-        userChoice = input("\n請輸入欲查看的備份代號:")
+        userChoice = input("\nPlease select the backup which you want to look inside:")
         os.system("clear")
         if userChoice == "%d"%i:
             break
@@ -139,13 +139,13 @@ def exit(msg, countDown):
 
 def main():
     while True:
-        print("請告訴我們您想做什麼？")
-        print("1.還原檔案")
-        print("2.立即備份")
-        print("3.檢視過去備份")
-        print("4.離開")
+        print("Please tell us what you want to do？")
+        print("1.Recover single file")
+        print("2.Backup immediately")
+        print("3.View the backups")
+        print("4.Leave the program")
         print()
-        userChoice = input("請輸入您的選擇(1/2/3/4):")
+        userChoice = input("Please input your choice(1/2/3/4):")
         os.system("clear")
 
         if userChoice == "1":
@@ -155,7 +155,7 @@ def main():
             progress = 50
             for i in range(progress):
                 os.system("clear")
-                print("正在進行備份作業，請您耐心等候%s"% ("." * (i%4)))
+                print("It takes time to complete backup, please be patient%s"% ("." * (i%4)))
                 print("[%s%s]"% ("#" * i, "=" * (progress -i)))
                 time.sleep(0.25)
             
@@ -166,7 +166,7 @@ def main():
         elif userChoice == "4":
             break
         else:
-            print("很抱歉，我們無法理解您的選擇「%s」是什麼。請輸入數字(1/2/3/4)"% userChoice)
+            print("Sorry, we could not understand what your choice \"%s\" is. Please input number 1, 2, 3 or 4"% userChoice)
             print()
 
 try:
