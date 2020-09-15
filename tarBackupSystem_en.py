@@ -8,39 +8,65 @@ welecomeMSG = "Welcome to use Tar Backup system!"
 exitMSG = "Thank you for your using"
 
 def recoverSingleFile():
+    pass
+
+def listDifferentVersion(fileName, versionLog):
+    f = open(versionLog, "r")
+    versions = f.readlines()
+
     while True:
-        fileName = input("Please input the file name which you want to recover, or input \"exit\" to go back to the selection list:")
-        baseVersionLog = "backup/logs/"
+        print("We have these different versions of \"%s\":\n"% fileName)
+        
+        i = 1
+        for version in versions:
+            print("%d.%s"% (i, version.strip()))
+            i += 1
+        
+        print("%d.Go back"% i)
+
+        try:
+            userChoice = input("\nPlease select the version which you want: ")
+            os.system("clear")
+            userChoice = int(userChoice)
+        except ValueError:
+            print("Sorry, we don't understand what your choice \"%s\" is. Please input integer number\n"% userChoice)
+            continue
+
+        if userChoice == i:
+            break
+        elif userChoice in range(1, len(versions) +1):
+            input("Recover \"%s\" complete! Press enter to continue!"% versions[userChoice-1].strip())
+            recoverSingleFile()
+            os.system("clear")
+        else:
+            print("Input number is not in range 1 to %d"% i)
+            print("Please input number again\n")
+            pass
+
+    f.close()
+
+def SingleFileMenu():
+    while True:
+        fileName = input("Please type the file name which you want to recover, or type \"exit\" to go back to the main menu: ")
+        os.system("clear")
+        path = "backup/logs/" + fileName
         
         if fileName == "exit":
-            os.system("clear")
             break
-        elif os.path.exists(baseVersionLog + fileName):
-            os.system("clear")
-            print("\"%s\"has these versions:\n"% fileName)
-
-            versionLog = baseVersionLog + fileName
-            f = open(versionLog, "r")
-            versions = f.readlines()
-            i = 1
-            for version in versions:
-                print("%d.%s"% (i, version.strip()))
-                i += 1            
-            
-            print("%d.Go back"% i)
-
-            userChoice = input("\nPlease select the version which you want to get:")
-            os.system("clear")
-
-            if userChoice == "%d"%i:
-                pass
-            else:
-                break
-
-
+        elif os.path.exists(path) and os.path.isfile(path):
+            listDifferentVersion(fileName, path)
         else:
             print("There is no any backup of \"%s\", please input a new file name."% fileName)
             print()
+
+def BackupMenu():
+    progress = 50
+    for i in range(progress):
+        os.system("clear")
+        print("It takes time to complete backup, please be patient%s"% ("." * (i%4)))
+        print("[%s%s]"% ("#" * i, "=" * (progress -i)))
+        time.sleep(0.25)
+    os.system("clear")
 
 def showBackupContent(name, path):
     bFinished = False
@@ -137,9 +163,9 @@ def exit(msg, countDown):
         sys.stdout.write("\rSystem will be closed in %d second"% i)
         time.sleep(1)
 
-def main():
+def MainMenu():
     while True:
-        print("Please tell us what you want to do？")
+        print("Please tell us what you want to do？\n")
         print("1.Recover single file")
         print("2.Backup immediately")
         print("3.View the backups")
@@ -149,24 +175,15 @@ def main():
         os.system("clear")
 
         if userChoice == "1":
-            recoverSingleFile()
+            SingleFileMenu()
         elif userChoice == "2":
-            
-            progress = 50
-            for i in range(progress):
-                os.system("clear")
-                print("It takes time to complete backup, please be patient%s"% ("." * (i%4)))
-                print("[%s%s]"% ("#" * i, "=" * (progress -i)))
-                time.sleep(0.25)
-            
-            os.system("clear")
-
+            BackupMenu()
         elif userChoice == "3":
             viewBackup()
         elif userChoice == "4":
             break
         else:
-            print("Sorry, we could not understand what your choice \"%s\" is. Please input number 1, 2, 3 or 4"% userChoice)
+            print("Sorry, we don't understand what your choice \"%s\" is. Please input integer number 1, 2, 3 or 4"% userChoice)
             print()
 
 try:
@@ -174,7 +191,7 @@ try:
     os.system("clear")
     print(welecomeMSG)
     print()
-    main()
+    MainMenu()
 except KeyboardInterrupt as e:
     exit(e, 0)
 else:
